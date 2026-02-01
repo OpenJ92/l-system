@@ -8,13 +8,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
  && rm -rf /var/lib/apt/lists/*
 
-# Copy only packaging metadata first (better Docker layer caching)
+# Copy everything (including src/)
 COPY pyproject.toml README.md LICENSE ./
+COPY src ./src
 
 # Install your package in editable mode with dev extras
-RUN pip install --no-cache-dir -U pip
+RUN pip install --no-cache-dir -U pip  && \
+    pip install --no-cache-dir -e ".[dev]"
 
-# Now copy the actual source
-COPY . .
+COPY . .    
 
 CMD ["bash"]
