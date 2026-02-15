@@ -12,9 +12,8 @@ class Generate():
         rewrites = []
         for index, symbol in enumerate(sentence):
             production = productions.get(symbol)
-            self.context.evolve(sentence, index, generation)
-            rewrite = production(symbol, self.context)
-            rewrites.append(rewrite)
+            context = self.context.evolve(sentence, index, generation)
+            rewrites.append(production(symbol, context))
 
         sentence = sentence.empty()
         for rewrite in rewrites:
@@ -24,8 +23,9 @@ class Generate():
 
     def run(self):
         sentence = self.lsystem.sentence
-        for _ in range(self.depth):
-            sentence = self.run_generation()
+        for generation in range(self.depth):
+            sentence = self.run_generation(generation)
+        return sentence
             
 
 def Run(generate: Generate):
