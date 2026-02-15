@@ -15,7 +15,7 @@ class Generate():
             rewrite = production(symbol, context)
             rewrites.append(rewrite)
 
-        sentence = alphabet.empty()
+        sentence = sentence.empty()
         for rewrite in rewrites:
             sentence = sentence.combine(rewrite)
 
