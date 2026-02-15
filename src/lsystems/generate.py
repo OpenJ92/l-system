@@ -10,14 +10,14 @@ class Generate():
         sentence = self.lsystem.sentence
 
         rewrites = []
-        for letter in sentence:
-            production = productions.get(letter)
-            rewrite = production(letter, context)
+        for symbol in sentence:
+            production = productions.get(symbol)
+            rewrite = production(symbol, context)
             rewrites.append(rewrite)
 
         sentence = alphabet.empty()
         for rewrite in rewrites:
-            sentence = alphabet.combine(sentence, rewrite)
+            sentence = sentence.combine(rewrite)
 
         return sentence
 
