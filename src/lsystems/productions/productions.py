@@ -1,9 +1,12 @@
-class Productions():
-    def __init__(self):
-        self.productions = defaultdict(lambda x: x)
+from lsystems.productions.static import Static
 
-    def add(self, symbol, rule):
-        self.productions[symbol] = rule
+class Productions():
+    def __init__(self, sentence_type):
+        self.productions = {}
+        self.lift = sentence_type.lift
+
+    def add(self, symbol, production):
+        self.productions[symbol] = production
 
     def get(self, symbol):
-        return self.productions[symbol]
+        return self.productions.get(symbol, Static(self.lift(symbol)))
