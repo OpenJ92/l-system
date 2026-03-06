@@ -32,8 +32,7 @@ from lsystems.productions.static import Static
 from lsystems.productions.stocastic import Stochastic
 from lsystems.productions.productions import Productions
 from lsystems.lsystem import LSystem
-from lsystems.generate import Generate
-
+from lsystems.generate import Generate, ScopeClasses, RunScope
 
 # ============================================================
 # Example 2: stochastic plant-ish branching
@@ -141,8 +140,7 @@ productions.add("F", f_prod)
 alphabet = set("FG+-[]")
 
 lsys = LSystem(alphabet, productions, sentence)
-gen = Generate(lsys, depth=10)
+gen = Generate(lsys, depth=15, seed=None)
 
 print("Example 4")
-for _ in range(10):
-    print(gen.run())
+print(gen.run())
