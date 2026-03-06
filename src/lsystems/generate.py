@@ -68,8 +68,6 @@ class Generate():
                 ## current generation's sentence
                 sentence = sentence.combine(rewrite)
 
-            print(sentence, generation)
-        
         return sentence
             
 def Run(generate: Generate):
