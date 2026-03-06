@@ -498,6 +498,148 @@ If you are extending the library, the highest-value next work is probably:
 4. richer sentence types and symbol structures,
 5. interpreters that consume generated sentences.
 
+Here it is in **clean Markdown** so you can copy/paste directly into your README.
+
+---
+
+## Grammar-Driven Generation (Future Work)
+
+One possible future direction for this project is **grammar-driven production synthesis**.
+
+Instead of writing productions manually, users could define a grammar describing the valid structure of L-system sentences. From this grammar the system could:
+
+* construct parsers
+* generate example sentences
+* enumerate valid sentences
+* synthesize valid productions
+
+This allows the grammar itself to define the **space of valid L-systems**.
+
+---
+
+### Grammar Definition
+
+The idea is to parse an **EBNF-like grammar language** into an internal grammar representation.
+
+Example:
+
+```ebnf
+sentence ::= element*
+element  ::= "F" | "X" | branch
+branch   ::= "[" turn sentence "]"
+turn     ::= "+" | "-"
+```
+
+This grammar describes valid turtle-graphics sentences.
+
+The grammar parser would produce an internal **Grammar AST**.
+
+---
+
+### Grammar Graph Representation
+
+The Grammar AST can be transformed into a **grammar graph** where:
+
+* nodes represent grammar constructs
+* edges represent expansion rules
+* rule references link nodes together
+
+Example structure:
+
+```
+sentence
+   |
+ Repeat
+   |
+ element
+  / |  \
+ F  X  branch
+        |
+      "[" → sentence → "]"
+```
+
+Because grammars are recursive, this structure forms a **graph** rather than a pure tree.
+
+---
+
+### Generating Valid Sentences
+
+Valid sentences can be produced by **traversing the grammar graph**.
+
+A traversal starts from the start rule and expands nodes according to their type:
+
+| Node Type | Generation Behavior                           |
+| --------- | --------------------------------------------- |
+| Literal   | Emit the literal token                        |
+| Sequence  | Generate each element in order                |
+| Choice    | Select one alternative                        |
+| Optional  | Emit either empty or the contained expression |
+| Repeat    | Emit the expression multiple times            |
+| RuleRef   | Expand the referenced rule                    |
+
+For recursive grammars, traversal must use a **depth or length limit** to ensure termination.
+
+Example generated sentences from the grammar above:
+
+```
+F
+FX
+F[X]
+F[+F]
+FX[-X]
+```
+
+All generated sentences are guaranteed to satisfy the grammar.
+
+---
+
+### Production Synthesis
+
+Once valid sentences can be generated, they can be used to synthesize productions.
+
+Example:
+
+```
+X → generate(sentence)
+```
+
+Because the generator respects the grammar, the resulting productions are **grammar-safe**.
+
+This makes it possible to automatically explore families of L-systems while preserving syntactic correctness.
+
+---
+
+### Multiple Interpreters
+
+The same grammar structure can support multiple interpreters:
+
+| Interpreter       | Purpose                                            |
+| ----------------- | -------------------------------------------------- |
+| Parser generator  | Convert grammar into a parser                      |
+| Example generator | Produce valid example sentences                    |
+| Enumerator        | Enumerate sentences up to a bound                  |
+| Grammar analysis  | Compute properties like nullable or minimum length |
+
+This follows the same design philosophy as the rest of the project: **a single declarative structure interpreted in multiple ways**.
+
+---
+
+### Relationship to the Parser System
+
+The grammar can also be compiled into the project’s **typeclass-based parser system**, allowing grammars defined in EBNF to produce fully composable parser objects.
+
+```
+EBNF
+  ↓
+Grammar AST
+  ↓
+Parser interpreter → Parser
+Generation interpreter → Example sentences
+Analysis interpreter → Grammar properties
+```
+
+This keeps grammars declarative while still integrating with the existing parser infrastructure.
+
 ## License
 
 See `LICENSE`.
