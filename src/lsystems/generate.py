@@ -54,9 +54,7 @@ class Generate():
             ## Update branch Scope object and capture
             branch = self.scope.generation(self.depth, generation, sentence)
 
-            ## Build next sentence directly instead of storing rewrites first
-            new_sentence = sentence.empty()
-
+            nsentence = sentence.empty()
             for index, symbol in enumerate(sentence):
                 ## Update leaf Scope object and capture
                 leaf = self.scope.position(index, symbol)
@@ -67,12 +65,11 @@ class Generate():
                 ## Construct ScopeBundle to be passed to production
                 package = ScopeBundle(root, branch, leaf)
 
-                ## Apply production and combine immediately
                 rewrite = production(symbol, package)
-                new_sentence = new_sentence.combine(rewrite)
+                nsentence = nsentence.combine(rewrite)
 
-            ## Advance to the next generation
-            sentence = new_sentence
+            sentence = nsentence
+
 
         return sentence
             
