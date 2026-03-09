@@ -185,8 +185,6 @@ a_ctx = ContextSensitive(0, 1)
 a_ctx.add(String(""), String("B"), String("X"))   # empty > A < B
 
 productions.add("A", a_ctx)
-productions.add("B", Static(String("B")))
-productions.add("X", Static(String("X")))
 
 alphabet = set("ABX")
 
@@ -289,10 +287,6 @@ b_var = VariationalContextSensitive(
 
 productions.add("A", Static(String("A")))
 productions.add("B", b_var)
-productions.add("C", Static(String("C")))
-productions.add("X", Static(String("X")))
-productions.add("Y", Static(String("Y")))
-productions.add("Z", Static(String("Z")))
 
 alphabet = set("ABCXYZ")
 
